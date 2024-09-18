@@ -6,7 +6,7 @@ const { createServer } = require('node:http');
 const server = createServer(app);
 
 const IO = require('socket.io');
-const picoip = "172.31.36.49";
+const picoip = "172.31.36.49"; // server is now turned off so I don't have to pay for it
 
 app.get('/', (req, res) => {
   io.on('connection', (socket) => {
