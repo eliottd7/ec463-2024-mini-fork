@@ -1,14 +1,20 @@
-const fs = require('fs');
+const { join } = require('node:path');
+
 const express = require('express');
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const { createServer } = require('node:http');
+const server = createServer(app);
+
+const IO = require('socket.io');
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(join(__dirname, 'index.html'));
 });
 
-http.listen(3000, () => {
-  console.log('Listening on *:3000');
+server.listen(3000, () => {
+  console.log('server running at http://localhost:3000');
 });
 
+io.on('connection', (socket) => {
+  
+});
