@@ -6,6 +6,7 @@ from machine import Pin
 import time
 import random
 import json
+import socketio
 
 
 N: int = 3
@@ -29,21 +30,10 @@ def blinker(N: int, led: Pin) -> None:
 
 
 def write_json(json_filename: str, data: dict) -> None:
-    """Writes data to a JSON file.
-
-    Parameters
-    ----------
-
-    json_filename: str
-        The name of the file to write to. This will overwrite any existing file.
-
-    data: dict
-        Dictionary data to write to the file.
-    """
-
-    with open(json_filename, "w") as f:
-        json.dump(data, f)
-
+    message = f"{data['min']}s:{data['max']}s:{data['avg']}s";
+    client = socketio.SimpleClient()
+    client.connect("{url}");
+    client.call("push", message);
 
 def scorer(t: list[int | None]) -> None:
     # %% collate results
@@ -57,7 +47,21 @@ def scorer(t: list[int | None]) -> None:
     # add key, value to this dict to store the minimum, maximum, average response time
     # and score (non-misses / total flashes) i.e. the score a floating point number
     # is in range [0..1]
-    data = {}
+    min = 100;
+    max = 0;
+    avg = 0;
+    for t in t_good:
+        if t < min:
+            min = t
+        if t > max:
+            max = t
+        avg += t
+    
+    data = {
+        "min": min,
+        "max": max,
+        "avg": t / len(t_good),
+    }
 
     # %% make dynamic filename and write JSON
 
