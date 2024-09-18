@@ -10,6 +10,21 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
+
+      const min = document.getElementById('min');
+      const max = document.getElementById('max');
+      const avg = document.getElementById('avg');
+
+      socket.on('update_min', (msg) => {
+        min.innerHTML = msg;
+      });
+      socket.on('update_max', (msg) => {
+        max.innerHTML = msg;
+      });
+      socket.on('update_avg', (msg) => {
+        avg.innerHTML = msg;
+      });
+      
     </script>
     <h1>Pico Data</h1>
     <ul>
